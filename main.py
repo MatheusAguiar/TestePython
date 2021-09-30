@@ -7,7 +7,7 @@ from random import randint
 
 tracker_types = ['BOOSTING', 'MIL', 'KCF', 'TLD', 'MEDIANFLOW', 'MOSSE', 'CSRT']
 
-tracker_type = tracker_types[1]
+tracker_type = tracker_types[6]
 #print(tracker_type)
 
 if int(minor_ver) < 3:
@@ -48,4 +48,33 @@ else:
     #print(ok)
 
     colors = (randint(0, 255), randint(0, 255), randint(0, 255))
-    print(colors)
+    #print(colors)
+
+    while True:
+        of, frame = video.read()
+        if not ok:
+            break
+
+        timer = cv2.getTickCount()
+        ok, bbox = tracker.update(frame)
+        #print(ok, bbox)
+
+        fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
+
+        if ok:
+            (x, y, w, h) = [int(v) for v in bbox]
+            cv2.rectangle(frame, (x, y), (x + w, y + h), colors, 2, 1)
+
+        else:
+            cv2.putText(frame, 'Falha no rastreamento', (100, 80),
+                        cv2.FONT_HERSHEY_SIMPLEX, .75, (0, 0, 255), 2)
+
+        cv2.putText(frame, tracker_type + ' Tracker', (100, 20),
+                    cv2.FONT_HERSHEY_SIMPLEX, .75, (50, 170, 50), 2)
+
+        cv2.putText(frame, 'FPS: ' + str(int(fps)), (100, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, .75, (50, 170, 50), 2)
+
+        cv2.imshow('Tracking', frame)
+        if cv2.waitKey(1) & 0XFF == 27:
+            break
