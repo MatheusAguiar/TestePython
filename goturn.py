@@ -1,9 +1,9 @@
 import cv2, sys, os
 from random import randint
 
-#if not (os.path.isfile('goturn.caffemodel') and os.path.isfile('goturn.prototxt')):
-    #print('Erro ao carregar os arquivos')
-    #sys.exit()
+if not (os.path.isfile('goturn.caffemodel') and os.path.isfile('goturn.prototxt')):
+    print('Erro ao carregar os arquivos')
+    sys.exit()
 
 tracker = cv2.TrackerGOTURN_create()
 
