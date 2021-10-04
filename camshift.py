@@ -1,3 +1,4 @@
+import numpy as np
 import cv2
 import time
 import matplotlib.pyplot as plt
@@ -38,12 +39,13 @@ while True:
     if ret == True:
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         dst = cv2.calcBackProject([hsv], [0], roi_hist, [0, 180], 1)
-        ret, track_window = cv2.meanShift(dst, (x, y, w, h), term_crit)
-        x, y, w, h, = track_window
-        cv2.rectangle(frame, (x,y), (x+w. y+h), (0,255,0), 2)
-        cv2.imshow('Meanshift', frame)
-        cv2.imshow('dst', dst)
-        cv2.imshow('ROI', roi)
+        ret, track_window = cv2.CamShift(dst, (x, y, w, h), term_crit)
+
+        pts = cv2.boxPoints(ret)
+        pts = np.int0(pts)
+        img2 = cv2.polylines(frame, [pts], True, 255, 2)
+
+        cv2.imshow('Camshift Rastreado', img2)
 
         if cv2.waitKey(1) == 13:
             break
